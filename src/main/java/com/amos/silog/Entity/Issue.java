@@ -2,9 +2,13 @@ package com.amos.silog.Entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.Lob;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Cache;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
+
 
 /**
  * Entity representing an issue in the system.
@@ -14,12 +18,15 @@ import lombok.Setter;
 @Table(name = "issues")
 @Getter
 @Setter
+@Cache(usage = CacheConcurrencyStrategy.READ_WRITE,
+region = "issueCache")
 public class Issue extends BaseEntity {
 
     @Column(nullable = false)
     private String title;
 
-    @Column(length = 2000)
+    @Lob
+    @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
     @Column(nullable = false)
@@ -30,6 +37,12 @@ public class Issue extends BaseEntity {
 
     @Column(name = "assigned_to")
     private String assignedTo;
+
+    private String project;
+
+    @Column(name = "log_url")
+    private String logUrl;
+
 
     // Default constructor
     public Issue() {
