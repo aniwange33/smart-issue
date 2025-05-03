@@ -1,7 +1,6 @@
 package com.amos.silog.Service;
 
 import org.springframework.ai.chat.client.ChatClient;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service

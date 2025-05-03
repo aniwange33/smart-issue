@@ -24,7 +24,7 @@ public class IssueController {
         this.ai = ai;
     }
 
-    //  POST /api/issues/report: Create a new issue
+    // POST /api/issues/report: Create a new issue
     @PostMapping("/report")
     public ResponseEntity<URI> createIssue(@Valid @RequestBody RequestIssueDto dto) {
         long id = issueService.createIssue(dto);
@@ -32,24 +32,37 @@ public class IssueController {
         return new ResponseEntity<>(uri, HttpStatus.CREATED);
     }
 
-    //   POST /api/issues/ai/suggest: Get AI-based suggestion for issue description
+    // POST /api/issues/ai/suggest: Get AI-based suggestion for issue description
     @PostMapping("/ai/suggest")
     public ResponseEntity<String> getAIBasedSuggestion(@RequestBody String description) {
          String refined  = ai.getDescriptionSuggestion(description);
         return ResponseEntity.ok(refined );
     }
 
-    //  GET /api/issues/{id}: View issue details
+    // GET /api/issues/{id}: View issue details
     @GetMapping("/{id}")
     public ResponseEntity<ResponseIssueDto> getIssue(@PathVariable("id") Long id) {
         return ResponseEntity.ok(issueService.getIssue(id));
     }
 
 
+    //PUT /api/issues/{id}: Update an issue
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateIssue(@PathVariable("id") Long id, @Valid @RequestBody RequestIssueDto dto) {
+        issueService.updateIssue(id, dto);
+        return ResponseEntity.noContent().build();
+    }
+
+    //DELETE /api/issues/{id}: Delete an issue
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteIssue(@PathVariable("id") Long id) {
+        issueService.deleteIssue(id);
+        return ResponseEntity.noContent().build();
+    }
+
+
     // TODO: Implement the following endpoints
     //    GET /api/issues: List all issues (with filtering options)
-    //    PUT /api/issues/{id}: Update an issue
-    //    DELETE /api/issues/{id}: Delete an issue
     //    POST /api/issues/upload: Upload files related to an issue
 
 }
