@@ -36,16 +36,7 @@ public class IssueService {
 
     public ResponseIssueDto getIssue(Long id) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Issue not find with id: " + id));
-        return ResponseIssueDto.builder()
-                .title(issue.getTitle())
-                .description(issue.getDescription())
-                .id(issue.getId())
-                .status(issue.getStatus())
-                .project(issue.getProject())
-                .logUrl(issue.getLogUrl())
-                .assignedTo(issue.getAssignedTo())
-                .severityLevel(issue.getSeverityLevel())
-                .build();
+        return getIssueDto(issue);
     }
 
     public void updateIssue(Long id, RequestIssueDto requestIssueDto) {
@@ -73,15 +64,19 @@ public class IssueService {
     public Page<ResponseIssueDto> getFilteredIssues(IssueFilterRequestDto filters, Pageable pageable) {
         Specification<Issue> spec = IssueSpecification.withFilters(filters);
         return issueRepository.findAll(spec, pageable)
-                .map(issue -> ResponseIssueDto.builder()
-                        .title(issue.getTitle())
-                        .description(issue.getDescription())
-                        .id(issue.getId())
-                        .status(issue.getStatus())
-                        .project(issue.getProject())
-                        .logUrl(issue.getLogUrl())
-                        .assignedTo(issue.getAssignedTo())
-                        .severityLevel(issue.getSeverityLevel())
-                        .build());
+                .map(IssueService::getIssueDto);
+    }
+
+    private static ResponseIssueDto getIssueDto(Issue issue) {
+        return ResponseIssueDto.builder()
+                .title(issue.getTitle())
+                .description(issue.getDescription())
+                .id(issue.getId())
+                .status(issue.getStatus())
+                .project(issue.getProject())
+                .logUrl(issue.getLogUrl())
+                .assignedTo(issue.getAssignedTo())
+                .severityLevel(issue.getSeverityLevel())
+                .build();
     }
 }

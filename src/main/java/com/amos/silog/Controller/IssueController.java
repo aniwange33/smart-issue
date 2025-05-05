@@ -70,7 +70,7 @@ public class IssueController {
     @GetMapping
     public ResponseEntity<Page<ResponseIssueDto>> listIssues(
             @ModelAttribute IssueFilterRequestDto filters,
-            @PageableDefault(size = 50, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+            @PageableDefault(size = 50, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<ResponseIssueDto> issues = issueService.getFilteredIssues(filters, pageable);
         return ResponseEntity.ok(issues);
     }
