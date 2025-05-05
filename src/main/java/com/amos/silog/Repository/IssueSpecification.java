@@ -1,7 +1,6 @@
 package com.amos.silog.Repository;
 
 import com.amos.silog.Dto.IssueDto.IssueFilterRequestDto;
-import com.amos.silog.Dto.IssueDto.IssueStatus;
 import com.amos.silog.Entity.Issue;
 import jakarta.persistence.criteria.Predicate;
 import org.springframework.data.jpa.domain.Specification;
@@ -21,11 +20,11 @@ public class IssueSpecification {
             if (filters.getSeverityLevel() != null) {
                 predicates.add(cb.equal(root.get("severityLevel"), filters.getSeverityLevel().name()));
             }
-            if (root.get("project") != null) {
+            if (filters.getProject() != null) {
                 predicates.add(cb.equal(root.get("project"), filters.getProject()));
             }
 
-            return cb.or(predicates.toArray(new Predicate[0]));
+            return cb.and(predicates.toArray(new Predicate[0]));
         };
     }
 }
