@@ -1,11 +1,16 @@
 package com.amos.silog.Controller;
 
 
+import com.amos.silog.Dto.IssueDto.IssueFilterRequestDto;
 import com.amos.silog.Dto.IssueDto.RequestIssueDto;
 import com.amos.silog.Dto.IssueDto.ResponseIssueDto;
 import com.amos.silog.Service.AiSuggestedDescriptionService;
 import com.amos.silog.Service.IssueService;
 import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,7 +22,7 @@ import java.net.URI;
 public class IssueController {
 
     private final IssueService issueService;
-    private final AiSuggestedDescriptionService  ai;
+    private final AiSuggestedDescriptionService ai;
 
     public IssueController(IssueService issueService, AiSuggestedDescriptionService ai) {
         this.issueService = issueService;
@@ -35,8 +40,8 @@ public class IssueController {
     // POST /api/issues/ai/suggest: Get AI-based suggestion for issue description
     @PostMapping("/ai/suggest")
     public ResponseEntity<String> getAIBasedSuggestion(@RequestBody String description) {
-         String refined  = ai.getDescriptionSuggestion(description);
-        return ResponseEntity.ok(refined );
+        String refined = ai.getDescriptionSuggestion(description);
+        return ResponseEntity.ok(refined);
     }
 
     // GET /api/issues/{id}: View issue details
@@ -61,8 +66,16 @@ public class IssueController {
     }
 
 
-    // TODO: Implement the following endpoints
     //    GET /api/issues: List all issues (with filtering options)
-    //    POST /api/issues/upload: Upload files related to an issue
+    @GetMapping
+    public ResponseEntity<Page<ResponseIssueDto>> listIssues(
+            @ModelAttribute IssueFilterRequestDto filters,
+            @PageableDefault(size = 50, sort = "createdDate", direction = Sort.Direction.DESC) Pageable pageable) {
+        Page<ResponseIssueDto> issues = issueService.getFilteredIssues(filters, pageable);
+        return ResponseEntity.ok(issues);
+    }
+
+    // TODO: Implement the following endpoints
+    //   POST /api/issues/upload: Upload files related to an issue
 
 }

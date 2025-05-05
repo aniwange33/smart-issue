@@ -2,6 +2,7 @@ package com.amos.silog.Repository;
 
 import com.amos.silog.Entity.Issue;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.List;
  * Provides methods to perform CRUD operations on IssueTable entities.
  */
 @Repository
-public interface IssueRepository extends JpaRepository<Issue, Long> {
+public interface IssueRepository extends JpaRepository<Issue, Long>, JpaSpecificationExecutor<Issue> {
     
     /**
      * Find issues by status.
