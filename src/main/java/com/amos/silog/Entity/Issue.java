@@ -1,9 +1,9 @@
 package com.amos.silog.Entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Lob;
-import jakarta.persistence.Table;
+import com.amos.silog.Dto.IssueDto.IssueStatus;
+import com.amos.silog.Dto.IssueDto.RequestIssueDto;
+import com.amos.silog.Dto.IssueDto.ResponseIssueDto;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Cache;
@@ -19,7 +19,7 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Getter
 @Setter
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE,
-region = "issueCache")
+        region = "issueCache")
 public class Issue extends BaseEntity {
 
     @Column(nullable = false)
@@ -53,5 +53,19 @@ public class Issue extends BaseEntity {
         this.title = title;
         this.status = status;
     }
+
+    public ResponseIssueDto toResponseDto() {
+        return new ResponseIssueDto(this);
+    }
+
+    public void applyRequest(RequestIssueDto requestIssueDto) {
+        this.title = requestIssueDto.getTitle();
+        this.status = IssueStatus.OPEN.name();
+        this.description = requestIssueDto.getDescription();
+        this.severityLevel = requestIssueDto.getSeverityLevel().name();
+        this.assignedTo = requestIssueDto.getAssignedTo();
+        this.project = requestIssueDto.getProject();
+    }
+
 
 }

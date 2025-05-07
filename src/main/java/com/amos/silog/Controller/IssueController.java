@@ -53,7 +53,7 @@ public class IssueController {
 
     //PUT /api/issues/{id}: Update an issue
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateIssue(@PathVariable("id") Long id, @Valid @RequestBody RequestIssueDto dto) {
+    public ResponseEntity<Void> updateIssue(@PathVariable("id") Long id, @Valid @RequestBody ResponseIssueDto dto) {
         issueService.updateIssue(id, dto);
         return ResponseEntity.noContent().build();
     }

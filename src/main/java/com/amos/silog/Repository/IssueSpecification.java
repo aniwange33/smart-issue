@@ -23,8 +23,11 @@ public class IssueSpecification {
             if (filters.getProject() != null) {
                 predicates.add(cb.equal(root.get("project"), filters.getProject()));
             }
-
-            return cb.and(predicates.toArray(new Predicate[0]));
+            if (predicates.isEmpty()) {
+                return cb.conjunction();
+            } else {
+                return cb.and(predicates.toArray(new Predicate[0]));
+            }
         };
     }
 }

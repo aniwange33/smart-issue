@@ -2,7 +2,6 @@ package com.amos.silog.Service;
 
 
 import com.amos.silog.Dto.IssueDto.IssueFilterRequestDto;
-import com.amos.silog.Dto.IssueDto.IssueStatus;
 import com.amos.silog.Dto.IssueDto.RequestIssueDto;
 import com.amos.silog.Dto.IssueDto.ResponseIssueDto;
 import com.amos.silog.Entity.Issue;
@@ -25,30 +24,22 @@ public class IssueService {
     }
 
     public Long createIssue(RequestIssueDto requestIssueDto) {
-        Issue issue = new Issue(requestIssueDto.getTitle(), IssueStatus.OPEN.name());
-        issue.setDescription(requestIssueDto.getDescription());
-        issue.setSeverityLevel(requestIssueDto.getSeverityLevel().name());
-        issue.setAssignedTo(requestIssueDto.getAssignedTo());
-        issue.setProject(requestIssueDto.getProject());
+        Issue issue = new Issue();
+        issue.applyRequest(requestIssueDto);
         issueRepository.save(issue);
         return issue.getId();
     }
 
     public ResponseIssueDto getIssue(Long id) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Issue not find with id: " + id));
-        return getIssueDto(issue);
+        return issue.toResponseDto();
     }
 
-    public void updateIssue(Long id, RequestIssueDto requestIssueDto) {
+    public void updateIssue(Long id, ResponseIssueDto responseIssueDto) {
         Issue issue = issueRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Issue not find with id: " + id));
+        RequestIssueDto requestDto = responseIssueDto.getRequestDto();
         try {
-            issue.setTitle(requestIssueDto.getTitle());
-            issue.setDescription(requestIssueDto.getDescription());
-            issue.setStatus(requestIssueDto.getStatus().name());
-            issue.setSeverityLevel(requestIssueDto.getSeverityLevel().name());
-            issue.setAssignedTo(requestIssueDto.getAssignedTo());
-            issue.setProject(requestIssueDto.getProject());
-            issue.setLogUrl(requestIssueDto.getLogUrl());
+            issue.applyRequest(requestDto);
             issueRepository.save(issue);
         } catch (OptimisticLockException e) {
             throw new EntityConflictException("Issue");
@@ -64,19 +55,6 @@ public class IssueService {
     public Page<ResponseIssueDto> getFilteredIssues(IssueFilterRequestDto filters, Pageable pageable) {
         Specification<Issue> spec = IssueSpecification.withFilters(filters);
         return issueRepository.findAll(spec, pageable)
-                .map(IssueService::getIssueDto);
-    }
-
-    private static ResponseIssueDto getIssueDto(Issue issue) {
-        return ResponseIssueDto.builder()
-                .title(issue.getTitle())
-                .description(issue.getDescription())
-                .id(issue.getId())
-                .status(issue.getStatus())
-                .project(issue.getProject())
-                .logUrl(issue.getLogUrl())
-                .assignedTo(issue.getAssignedTo())
-                .severityLevel(issue.getSeverityLevel())
-                .build();
+                .map(Issue::toResponseDto);
     }
 }
