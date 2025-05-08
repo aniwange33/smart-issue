@@ -1,0 +1,8 @@
+SELECT pg_column_size(t.*) AS row_bytes
+FROM issues t
+WHERE id = 1;
+
+
+table size:
+
+SELECT pg_size_pretty(pg_total_relation_size('issues'));

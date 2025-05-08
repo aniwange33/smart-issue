@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Repository interface for the IssueTable entity.
@@ -29,6 +30,9 @@ public interface IssueRepository extends JpaRepository<Issue, Long>, JpaSpecific
      * @return a list of issues assigned to the given user
      */
     List<Issue> findByAssignedTo(String assignedTo);
+
+
+    Optional<Issue> getIssueByUuid(String uuid);
     
     /**
      * Find issues by severity level.

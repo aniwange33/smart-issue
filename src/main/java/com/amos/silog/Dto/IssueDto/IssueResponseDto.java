@@ -1,21 +1,22 @@
 package com.amos.silog.Dto.IssueDto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import jakarta.validation.constraints.NotNull;
+
 import lombok.Builder;
 import lombok.Data;
 
+import java.io.Serializable;
+
 @Data
 @Builder
-public class RequestIssueDto {
+public class IssueResponseDto  implements Serializable {
     private Long id;
-    @NotNull
+    private String uuid;
     private String title;
-    @NotNull
     private String description;
-    @NotNull
-    private IssueSeverityLevel severityLevel;
+    private String status;
+    private String severityLevel;
     private String assignedTo;
-    @NotNull
     private String project;
+    private String logUrl;
+
 }

@@ -2,8 +2,8 @@ package com.amos.silog.Controller;
 
 
 import com.amos.silog.Dto.IssueDto.IssueFilterRequestDto;
-import com.amos.silog.Dto.IssueDto.RequestIssueDto;
-import com.amos.silog.Dto.IssueDto.ResponseIssueDto;
+import com.amos.silog.Dto.IssueDto.IssueRequestDto;
+import com.amos.silog.Dto.IssueDto.IssueResponseDto;
 import com.amos.silog.Service.AiSuggestedDescriptionService;
 import com.amos.silog.Service.IssueService;
 import jakarta.validation.Valid;
@@ -31,8 +31,8 @@ public class IssueController {
 
     // POST /api/issues/report: Create a new issue
     @PostMapping("/report")
-    public ResponseEntity<URI> createIssue(@Valid @RequestBody RequestIssueDto dto) {
-        long id = issueService.createIssue(dto);
+    public ResponseEntity<URI> createIssue(@Valid @RequestBody IssueRequestDto dto) {
+        String id =  issueService.createIssue(dto);
         URI uri = URI.create("/api/v1/issues/" + id);
         return new ResponseEntity<>(uri, HttpStatus.CREATED);
     }
@@ -46,21 +46,21 @@ public class IssueController {
 
     // GET /api/issues/{id}: View issue details
     @GetMapping("/{id}")
-    public ResponseEntity<ResponseIssueDto> getIssue(@PathVariable("id") Long id) {
+    public ResponseEntity<IssueResponseDto> getIssue(@PathVariable("id") String id) {
         return ResponseEntity.ok(issueService.getIssue(id));
     }
 
 
     //PUT /api/issues/{id}: Update an issue
     @PutMapping("/{id}")
-    public ResponseEntity<Void> updateIssue(@PathVariable("id") Long id, @Valid @RequestBody ResponseIssueDto dto) {
+    public ResponseEntity<Void> updateIssue(@PathVariable("id") String id, @Valid @RequestBody IssueResponseDto dto) {
         issueService.updateIssue(id, dto);
         return ResponseEntity.noContent().build();
     }
 
     //DELETE /api/issues/{id}: Delete an issue
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteIssue(@PathVariable("id") Long id) {
+    public ResponseEntity<String> deleteIssue(@PathVariable("id") String  id) {
         issueService.deleteIssue(id);
         return ResponseEntity.noContent().build();
     }
@@ -68,10 +68,10 @@ public class IssueController {
 
     //    GET /api/issues: List all issues (with filtering options)
     @GetMapping
-    public ResponseEntity<Page<ResponseIssueDto>> listIssues(
+    public ResponseEntity<Page<IssueResponseDto>> listIssues(
             @ModelAttribute IssueFilterRequestDto filters,
             @PageableDefault(size = 50, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
-        Page<ResponseIssueDto> issues = issueService.getFilteredIssues(filters, pageable);
+        Page<IssueResponseDto> issues = issueService.getFilteredIssues(filters, pageable);
         return ResponseEntity.ok(issues);
     }
 

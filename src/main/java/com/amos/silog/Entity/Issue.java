@@ -1,8 +1,6 @@
 package com.amos.silog.Entity;
 
-import com.amos.silog.Dto.IssueDto.IssueStatus;
-import com.amos.silog.Dto.IssueDto.RequestIssueDto;
-import com.amos.silog.Dto.IssueDto.ResponseIssueDto;
+import com.amos.silog.Dto.IssueDto.IssueResponseDto;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,7 +23,6 @@ public class Issue extends BaseEntity {
     @Column(nullable = false)
     private String title;
 
-    @Lob
     @Column(name = "description", columnDefinition = "TEXT")
     private String description;
 
@@ -54,18 +51,10 @@ public class Issue extends BaseEntity {
         this.status = status;
     }
 
-    public ResponseIssueDto toResponseDto() {
-        return new ResponseIssueDto(this);
-    }
 
-    public void applyRequest(RequestIssueDto requestIssueDto) {
-        this.title = requestIssueDto.getTitle();
-        this.status = IssueStatus.OPEN.name();
-        this.description = requestIssueDto.getDescription();
-        this.severityLevel = requestIssueDto.getSeverityLevel().name();
-        this.assignedTo = requestIssueDto.getAssignedTo();
-        this.project = requestIssueDto.getProject();
-    }
+
+
+
 
 
 }
