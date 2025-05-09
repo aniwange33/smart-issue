@@ -9,9 +9,7 @@ import com.amos.silog.Exception.EntityConflictException;
 import com.amos.silog.Exception.ResourceNotFoundException;
 import com.amos.silog.Repository.IssueRepository;
 import com.amos.silog.Repository.IssueSpecification;
-import com.amos.silog.mapper.IssueRequestConverter;
-import com.amos.silog.mapper.IssueResponseConverter;
-import com.amos.silog.mapper.IssueResponseToRequestConverter;
+import com.amos.silog.mapper.*;
 import jakarta.persistence.OptimisticLockException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -25,19 +23,18 @@ public class IssueService {
     private final IssueRequestConverter requestConverter;
     private final IssueResponseConverter responseConverter;
     private final IssueResponseToRequestConverter toRequestConverter;
+    private final IssueUpdateConverter updateConverter;
 
     @Autowired
-    public IssueService(IssueRepository issueRepository,
-                        IssueRequestConverter issueRequestMapper,
-                        IssueResponseConverter issueResponseMapper,
-                        IssueResponseToRequestConverter responseToRequestMapper) {
-        this.issueRepository = issueRepository;
-        this.requestConverter = issueRequestMapper;
-        this.responseConverter = issueResponseMapper;
-        this.toRequestConverter = responseToRequestMapper;
+    public IssueService(IssueRepository repo, IssueConverters converters) {
+        this.issueRepository = repo;
+        this.requestConverter = converters.request;
+        this.responseConverter = converters.response;
+        this.toRequestConverter = converters.toRequest;
+        this.updateConverter = converters.update;
     }
 
-    public String  createIssue(IssueRequestDto issueRequestDto) {
+    public String createIssue(IssueRequestDto issueRequestDto) {
         Issue issue = requestConverter.apply(issueRequestDto);
         issueRepository.save(issue);
         return issue.getUuid();
@@ -52,14 +49,14 @@ public class IssueService {
         Issue issue = issueRepository.getIssueByUuid(id).orElseThrow(() -> new ResourceNotFoundException("Issue not find with id: " + id));
         IssueRequestDto requestDto = toRequestConverter.apply(issueResponseDto);
         try {
-            requestConverter.apply(requestDto);
+            updateConverter.updateEntity(issue, requestDto);
             issueRepository.save(issue);
         } catch (OptimisticLockException e) {
             throw new EntityConflictException("Issue");
         }
     }
 
-    public void deleteIssue(String  id) {
+    public void deleteIssue(String id) {
         Issue issue = issueRepository.getIssueByUuid(id).orElseThrow(() -> new ResourceNotFoundException("Issue not find with id: " + id));
         issue.setDeleted(true);
         issueRepository.save(issue);

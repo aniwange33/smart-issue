@@ -1,6 +1,8 @@
 package com.amos.silog.Entity;
 
 import com.amos.silog.Dto.IssueDto.IssueResponseDto;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
