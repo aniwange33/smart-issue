@@ -20,9 +20,11 @@ public class BaseEntityTest {
     @Test
     public void testBaseEntityFields() {
         // Create a new issue
-        Issue issue = new Issue("Test IssueTable", "Open");
-        issue.setDescription("This is a test issue to verify BaseEntity functionality");
-        issue.setSeverityLevel("Medium");
+        Issue issue = new Issue()
+                .withDescription("This is a test issue to verify BaseEntity functionality")
+                .withSeverityLevel("Medium")
+               .withStatus("Open")
+                .withTitle("Test Issue");
 
         // Save the issue
         Issue savedIssue = issueRepository.save(issue);
@@ -42,12 +44,12 @@ public class BaseEntityTest {
         assertTrue(savedIssue.getUpdatedAt().isAfter(now.minusMinutes(1)));
 
         // Update the issue
-        savedIssue.setStatus("In Progress");
+        savedIssue.withStatus("In Progress");
         Issue updatedIssue = issueRepository.save(savedIssue);
 
         // Verify that updatedAt was updated but createdAt remains the same
         assertEquals(savedIssue.getCreatedAt(), updatedIssue.getCreatedAt());
-        assertTrue(updatedIssue.getUpdatedAt().isAfter(savedIssue.getUpdatedAt()) || 
-                   updatedIssue.getUpdatedAt().equals(savedIssue.getUpdatedAt()));
+        assertTrue(updatedIssue.getUpdatedAt().isAfter(savedIssue.getUpdatedAt()) ||
+                updatedIssue.getUpdatedAt().equals(savedIssue.getUpdatedAt()));
     }
 }

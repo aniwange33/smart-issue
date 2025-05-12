@@ -1,13 +1,14 @@
 package com.amos.silog.Entity;
 
-import com.amos.silog.Dto.IssueDto.IssueResponseDto;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Getter;
-import lombok.Setter;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.Cache;
 import org.hibernate.annotations.CacheConcurrencyStrategy;
+import org.hibernate.annotations.SQLDelete;
+import org.hibernate.annotations.Where;
 
 
 /**
@@ -17,21 +18,23 @@ import org.hibernate.annotations.CacheConcurrencyStrategy;
 @Entity
 @Table(name = "issues")
 @Getter
-@Setter
+@NoArgsConstructor
 @Cache(usage = CacheConcurrencyStrategy.READ_WRITE,
         region = "issueCache")
+@SQLDelete(sql = "UPDATE issues SET deleted = true WHERE id = ? AND version = ?")
+@Where(clause = "deleted = false")
 public class Issue extends BaseEntity {
 
     @Column(nullable = false)
     private String title;
 
-    @Column(name = "description", columnDefinition = "TEXT")
-    private String description;
-
     @Column(nullable = false)
     private String status;
 
-    @Column(name = "severity_level")
+    @Column(nullable = false, name = "description", columnDefinition = "TEXT")
+    private String description;
+
+    @Column(nullable = false, name = "severity_level")
     private String severityLevel;
 
     @Column(name = "assigned_to")
@@ -42,21 +45,43 @@ public class Issue extends BaseEntity {
     @Column(name = "log_url")
     private String logUrl;
 
-
-    // Default constructor
-    public Issue() {
-    }
-
-    // Constructor with required fields
     public Issue(String title, String status) {
         this.title = title;
         this.status = status;
     }
 
+    public Issue withTitle(String title) {
+        this.title = title;
+        return this;
+    }
 
+    public Issue withDescription(String description) {
+        this.description = description;
+        return this;
+    }
 
+    public Issue withStatus(String status) {
+        this.status = status;
+        return this;
+    }
 
+    public Issue withSeverityLevel(String severityLevel) {
+        this.severityLevel = severityLevel;
+        return this;
+    }
 
+    public Issue withAssignedTo(String assignedTo) {
+        this.assignedTo = assignedTo;
+        return this;
+    }
 
+    public Issue withProject(String project) {
+        this.project = project;
+        return this;
+    }
 
+    public Issue withLogUrl(String logUrl) {
+        this.logUrl = logUrl;
+        return this;
+    }
 }

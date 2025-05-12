@@ -16,6 +16,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 public class IssueService {
@@ -45,21 +46,21 @@ public class IssueService {
         return responseConverter.apply(issue);
     }
 
+    @Transactional
     public void updateIssue(String id, IssueResponseDto issueResponseDto) {
         Issue issue = issueRepository.getIssueByUuid(id).orElseThrow(() -> new ResourceNotFoundException("Issue not find with id: " + id));
         IssueRequestDto requestDto = toRequestConverter.apply(issueResponseDto);
         try {
             updateConverter.updateEntity(issue, requestDto);
-            issueRepository.save(issue);
         } catch (OptimisticLockException e) {
             throw new EntityConflictException("Issue");
         }
     }
 
+    @Transactional
     public void deleteIssue(String id) {
         Issue issue = issueRepository.getIssueByUuid(id).orElseThrow(() -> new ResourceNotFoundException("Issue not find with id: " + id));
-        issue.setDeleted(true);
-        issueRepository.save(issue);
+        issueRepository.delete(issue);
     }
 
     public Page<IssueResponseDto> getFilteredIssues(IssueFilterRequestDto filters, Pageable pageable) {

@@ -15,6 +15,5 @@ public class IssueRequestDto {
     @NotNull
     private IssueSeverityLevel severityLevel;
     private String assignedTo;
-    @NotNull
     private String project;
 }
