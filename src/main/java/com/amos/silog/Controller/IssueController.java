@@ -7,6 +7,7 @@ import com.amos.silog.Dto.IssueDto.IssueResponseDto;
 import com.amos.silog.Service.AiSuggestedDescriptionService;
 import com.amos.silog.Service.IssueService;
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -73,6 +74,14 @@ public class IssueController {
             @PageableDefault(size = 50, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
         Page<IssueResponseDto> issues = issueService.getFilteredIssues(filters, pageable);
         return ResponseEntity.ok(issues);
+    }
+
+    @Value("${spring.ai.openai.api-key}")
+    private String env;
+
+    @GetMapping("/env")
+    public String showEnv() {
+        return env;
     }
 
     // TODO: Implement the following endpoints

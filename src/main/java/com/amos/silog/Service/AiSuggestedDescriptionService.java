@@ -1,10 +1,16 @@
 package com.amos.silog.Service;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@Slf4j
 public class AiSuggestedDescriptionService {
+
+    @Value("${spring.ai.openai.api-key}")
+    private static String AI_API_KEY;
 
     private final ChatClient chatClient;
 
@@ -37,6 +43,7 @@ public class AiSuggestedDescriptionService {
             "\n";
 
     public AiSuggestedDescriptionService(ChatClient.Builder chatBuilder ) {
+         log.info("API_KEY: {}", AI_API_KEY);
         this. chatClient  = chatBuilder.defaultSystem(PROMPT).build();
     }
 

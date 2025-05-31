@@ -53,7 +53,7 @@ public class IssueService {
         try {
             updateConverter.updateEntity(issue, requestDto);
         } catch (OptimisticLockException e) {
-            throw new EntityConflictException("Issue");
+            throw new EntityConflictException(issue.getTitle());
         }
     }
 
