@@ -76,13 +76,6 @@ public class IssueController {
         return ResponseEntity.ok(issues);
     }
 
-    @Value("${spring.ai.openai.api-key}")
-    private String env;
-
-    @GetMapping("/env")
-    public String showEnv() {
-        return env;
-    }
 
     // TODO: Implement the following endpoints
     //   POST /api/issues/upload: Upload files related to an issue
