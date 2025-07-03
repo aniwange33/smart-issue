@@ -1,6 +1,7 @@
 package com.amos.silog.Entity;
 
-import com.amos.silog.Repository.IssueRepository;
+import com.amos.silog.issues.repository.IssueRepository;
+import com.amos.silog.issues.model.Issue;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
