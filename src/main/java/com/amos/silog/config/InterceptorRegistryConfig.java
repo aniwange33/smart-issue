@@ -1,6 +1,6 @@
 package com.amos.silog.config;
 
-import com.amos.silog.issues.controller.interceptor.AppInterceptor;
+import com.amos.silog.issue.controller.interceptor.AppInterceptor;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;

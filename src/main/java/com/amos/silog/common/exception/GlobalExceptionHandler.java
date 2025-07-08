@@ -1,7 +1,5 @@
-package com.amos.silog.common;
+package com.amos.silog.common.exception;
 
-import com.amos.silog.common.exception.EntityConflictException;
-import com.amos.silog.common.exception.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -14,8 +12,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestControllerAdvice
+        //(basePackages = {
+//        "com.amos.silog.resolution.controller",
+//        "com.amos.silog.issue.controller",
+//        "com.amos.silog.auth.controller"
+//})
 public class GlobalExceptionHandler {
-
     @ExceptionHandler(EntityConflictException.class)
     public ResponseEntity<String> handleIssueConflict(EntityConflictException ex) {
         return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());

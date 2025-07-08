@@ -43,9 +43,4 @@ public class RegisterRequestDto {
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    @NotNull(message = "Role is required")
-    private UserRole role;
 }

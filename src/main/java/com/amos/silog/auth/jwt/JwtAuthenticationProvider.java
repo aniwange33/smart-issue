@@ -8,10 +8,6 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 @Slf4j
 public class JwtAuthenticationProvider implements AuthenticationProvider {
@@ -34,7 +30,7 @@ public class JwtAuthenticationProvider implements AuthenticationProvider {
         if (username == null) {
             throw new BadCredentialsException("Invalid JWT Token");
         }
-        AppUser  user  = authService.loadUserByUsername(username);
+        AppUser user = authService.loadUserByUsername(username);
 
         return new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
     }
